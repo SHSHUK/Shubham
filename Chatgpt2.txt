@@ -1,0 +1,103 @@
+import java.util.Random;
+
+public class ForestGame {
+    public static void main(String[] args) {
+        char[][] forest = generateForest(5, 5);
+        displayForest(forest);
+        movePlayer(forest, 'D');
+        displayForest(forest);
+    }
+
+    public static char[][] generateForest(int rows, int cols) {
+        char[][] forest = new char[rows][cols];
+        Random random = new Random();
+
+        // Populate forest with trees and open spaces
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (random.nextDouble() < 0.3) {
+                    forest[i][j] = 'T'; // Tree
+                } else {
+                    forest[i][j] = '.'; // Open space
+                }
+            }
+        }
+
+        // Place player at a random empty location
+        int playerRow, playerCol;
+        do {
+            playerRow = random.nextInt(rows);
+            playerCol = random.nextInt(cols);
+        } while (forest[playerRow][playerCol] == 'T');
+
+        forest[playerRow][playerCol] = 'P'; // Player
+        return forest;
+    }
+
+    public static void displayForest(char[][] forest) {
+        for (char[] row : forest) {
+            for (char cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public static void movePlayer(char[][] forest, char direction) {
+        int[] playerPosition = getPlayerPosition(forest);
+        int row = playerPosition[0];
+        int col = playerPosition[1];
+
+        switch (direction) {
+            case 'W': // Up
+                if (row > 0 && forest[row - 1][col] != 'T') {
+                    forest[row][col] = '.';
+                    forest[row - 1][col] = 'P';
+                } else {
+                    System.out.println("Invalid move!");
+                }
+                break;
+            case 'S': // Down
+                if (row < forest.length - 1 && forest[row + 1][col] != 'T') {
+                    forest[row][col] = '.';
+                    forest[row + 1][col] = 'P';
+                } else {
+                    System.out.println("Invalid move!");
+                }
+                break;
+            case 'A': // Left
+                if (col > 0 && forest[row][col - 1] != 'T') {
+                    forest[row][col] = '.';
+                    forest[row][col - 1] = 'P';
+                } else {
+                    System.out.println("Invalid move!");
+                }
+                break;
+            case 'D': // Right
+                if (col < forest[0].length - 1 && forest[row][col + 1] != 'T') {
+                    forest[row][col] = '.';
+                    forest[row][col + 1] = 'P';
+                } else {
+                    System.out.println("Invalid move!");
+                }
+                break;
+            default:
+                System.out.println("Invalid direction!");
+        }
+    }
+
+    public static int[] getPlayerPosition(char[][] forest) {
+        int[] position = new int[2];
+        for (int i = 0; i < forest.length; i++) {
+            for (int j = 0; j < forest[0].length; j++) {
+                if (forest[i][j] == 'P') {
+                    position[0] = i;
+                    position[1] = j;
+                    return position;
+                }
+            }
+        }
+        return null; // Player not found
+    }
+}

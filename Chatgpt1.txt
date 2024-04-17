@@ -1,0 +1,46 @@
+class ForestGame:
+    def __init__(self, forest):
+        self.forest = forest
+        self.player_position = self.find_player_position()
+
+    def find_player_position(self):
+        for i in range(len(self.forest)):
+            for j in range(len(self.forest[i])):
+                if self.forest[i][j] == 'P':
+                    return (i, j)
+        return None
+
+    def display_forest(self):
+        for row in self.forest:
+            print(' '.join(row))
+
+    def move_player(self, direction):
+        i, j = self.player_position
+        if direction == 'up' and i > 0 and self.forest[i - 1][j] != 'T':
+            self.forest[i][j], self.forest[i - 1][j] = self.forest[i - 1][j], self.forest[i][j]
+            self.player_position = (i - 1, j)
+        elif direction == 'down' and i < len(self.forest) - 1 and self.forest[i + 1][j] != 'T':
+            self.forest[i][j], self.forest[i + 1][j] = self.forest[i + 1][j], self.forest[i][j]
+            self.player_position = (i + 1, j)
+        elif direction == 'left' and j > 0 and self.forest[i][j - 1] != 'T':
+            self.forest[i][j], self.forest[i][j - 1] = self.forest[i][j - 1], self.forest[i][j]
+            self.player_position = (i, j - 1)
+        elif direction == 'right' and j < len(self.forest[i]) - 1 and self.forest[i][j + 1] != 'T':
+            self.forest[i][j], self.forest[i][j + 1] = self.forest[i][j + 1], self.forest[i][j]
+            self.player_position = (i, j + 1)
+        else:
+            print("Can't move there!")
+
+# Example usage:
+forest_map = [
+    ['.', '.', '.', 'T', '.', '.'],
+    ['.', '.', '.', '.', 'T', '.'],
+    ['.', 'T', '.', '.', '.', '.'],
+    ['.', '.', '.', 'P', '.', '.'],
+    ['.', '.', 'T', '.', '.', '.']
+]
+
+game = ForestGame(forest_map)
+game.display_forest()
+game.move_player('up')
+game.display_forest()
